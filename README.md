@@ -30,7 +30,42 @@ The service is configured via environment variables:
 
 ## Deployment
 
-### Docker Compose (Recommended)
+### Using Pre-built Image from GitHub Container Registry (Easiest)
+Pre-built multi-platform Docker images are automatically published to GitHub Container Registry on every release and push to main.
+
+Pull and run the latest image:
+```bash
+docker pull ghcr.io/nico-iaco/cloudflarednsupdater:latest
+
+docker run -d \
+  --name cf-ddns \
+  --restart unless-stopped \
+  -e CF_API_TOKEN=your_token \
+  -e CF_ZONE_ID=your_zone_id \
+  -e CRON_SPEC="@every 30m" \
+  ghcr.io/nico-iaco/cloudflarednsupdater:latest
+```
+
+Or use with Docker Compose:
+```yaml
+services:
+  cf-ddns:
+    image: ghcr.io/nico-iaco/cloudflarednsupdater:latest
+    environment:
+      CF_API_TOKEN: "${CF_API_TOKEN}"
+      CF_ZONE_ID: "${CF_ZONE_ID}"
+      CRON_SPEC: "@every 30m"
+    restart: unless-stopped
+```
+
+Available tags:
+- `latest` - Latest build from main branch
+- `v1.0.0` - Specific version tags
+- `1.0` - Major.minor version tags
+- `1` - Major version tags
+- `sha-<commit>` - Specific commit builds
+
+### Docker Compose (Build from Source)
 1. Clone the repository:
 ```bash
 git clone <repository-url>
@@ -116,6 +151,33 @@ The service provides clear, emoji-enhanced logging:
 ### Invalid cron expression
 - Test your cron expression syntax
 - Use crontab.guru for validation
+
+## CI/CD and Container Registry
+
+### Automated Builds
+This project uses GitHub Actions to automatically build and publish Docker images to the GitHub Container Registry (ghcr.io).
+
+**Workflow triggers:**
+- **Push to main branch**: Builds and tags image as `latest`
+- **Release creation**: Builds and tags with version numbers (e.g., `v1.0.0`, `1.0`, `1`)
+- **Manual dispatch**: Can be triggered manually from the Actions tab
+
+**Multi-platform support:**
+- The workflow builds images for both `linux/amd64` and `linux/arm64` platforms
+- Images are automatically pushed to `ghcr.io/nico-iaco/cloudflarednsupdater`
+
+**Image tags:**
+- `latest` - Always points to the most recent build from main
+- `v1.0.0` - Exact version tags for releases
+- `1.0` and `1` - Convenience tags for major/minor versions
+- `sha-<commit>` - Specific commit identifiers for reproducibility
+
+**No additional secrets required:**
+- The workflow uses the built-in `GITHUB_TOKEN` for authentication
+- No manual configuration needed - works out of the box
+
+**Viewing published images:**
+Visit the [packages page](https://github.com/nico-iaco/cloudflareDnsUpdater/pkgs/container/cloudflarednsupdater) to see all available versions.
 
 ## License
 This project is provided as-is for personal and commercial use.

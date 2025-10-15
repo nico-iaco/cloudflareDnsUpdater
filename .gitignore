@@ -1,0 +1,49 @@
+# Binari
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+/bin/
+/build/
+/dist/
+/out/
+
+# Test coverage
+*.coverage
+*.coverprofile
+coverage.txt
+coverage.html
+
+# Go workspace
+go.work
+go.work.sum
+
+# Dipendenze vendorizzate (opzionale)
+/vendor/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Env e secrets
+.env
+.env.local
+*.pem
+*.key
+
+# Log
+*.log
+logs/
+
+# Docker
+docker-compose.override.yml
+
+# OS
+Thumbs.db

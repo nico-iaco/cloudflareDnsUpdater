@@ -1,0 +1,12 @@
+services:
+  cf-ddns:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cf-ddns:latest
+    environment:
+      CF_API_TOKEN: "${CF_API_TOKEN}"
+      CF_ZONE_ID: "${CF_ZONE_ID}"
+      # Opzionale: se omesso, l'app usa il default "@every 30m"
+      CRON_SPEC: "@every 30m"
+    restart: unless-stopped
